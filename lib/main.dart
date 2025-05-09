@@ -1,43 +1,192 @@
+import 'package:act8_diseno_1057/Video10.dart';
 import 'package:flutter/material.dart';
+import 'package:page_transition/page_transition.dart';
 
-void main() => runApp(MyApp());
+void main() => runApp(MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: HomePage(),
+    ));
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-  // This widget is the root of your application.
+class HomePage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      // Application name
-      title: 'Flutter Hello World',
-      // Application theme data, you can set the colors for the application as
-      // you want
-      theme: ThemeData(
-        // useMaterial3: false,
-        primarySwatch: Colors.blue,
-      ),
-      // A widget which will be started on application startup
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
+  _HomePageState createState() => _HomePageState();
 }
 
-class MyHomePage extends StatelessWidget {
-  final String title;
-  const MyHomePage({super.key, required this.title});  
+class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
+  PageController? _pageController;
+
+  AnimationController? rippleController;
+  AnimationController? scaleController;
+
+  Animation<double>? rippleAnimation;
+  Animation<double>? scaleAnimation;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _pageController = PageController(initialPage: 0);
+
+    rippleController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1));
+
+    scaleController =
+        AnimationController(vsync: this, duration: Duration(seconds: 1))
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              Navigator.push(
+                  context,
+                  PageTransition(
+                      type: PageTransitionType.fade, child: Dashboard()));
+            }
+          });
+
+    rippleAnimation =
+        Tween<double>(begin: 80.0, end: 90.0).animate(rippleController!)
+          ..addStatusListener((status) {
+            if (status == AnimationStatus.completed) {
+              rippleController?.reverse();
+            } else if (status == AnimationStatus.dismissed) {
+              rippleController?.forward();
+            }
+          });
+
+    scaleAnimation =
+        Tween<double>(begin: 1.0, end: 30.0).animate(scaleController!);
+
+    rippleController?.forward();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        // The title text which will be shown on the action bar
-        title: Text(title),
-      ),
-      body: Center(
-        child: Text(
-          'Hello, World!',
-        ),
+      body: PageView(
+        controller: _pageController,
+        children: <Widget>[
+          makePage(image: 'assets/images/fondo.png'),
+          makePage(image: 'assets/images/logo.png'),
+          makePage(image: 'assets/images/logo.png'),
+        ],
       ),
     );
+  }
+
+  Widget makePage({image}) {
+    return Container(
+        decoration: BoxDecoration(
+            image:
+                DecorationImage(image: AssetImage(image), fit: BoxFit.cover)),
+        child: Container(
+          decoration: BoxDecoration(
+              gradient: LinearGradient(
+                  begin: Alignment.topRight,
+                  end: Alignment.bottomRight,
+                  colors: [
+                Colors.black.withOpacity(.3),
+                Colors.black.withOpacity(.2),
+              ])),
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: <Widget>[
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 60,
+                    ),
+                    Text(
+                      'Refrescate\nManera Unica',
+                      style: TextStyle(
+                          color: Color(0xffffffff),
+                          fontSize: 45,
+                          fontWeight: FontWeight.w900),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      'Esta es la app de CocaCola\n toma la mejor bebida del mundo.',
+                      style: TextStyle(
+                          color: Color(0xff000000),
+                          fontSize: 18,
+                          height: 1.4,
+                          fontWeight: FontWeight.w300),
+                    ),
+                    SizedBox(
+                      height: 40,
+                    ),
+                  ],
+                ),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: <Widget>[
+                //     FadeAnimation(1, Text("15", style: TextStyle(color: Colors.yellow[400], fontSize: 40, fontWeight: FontWeight.bold),)),
+                //     FadeAnimation(1.2, Text("Minutes", style: TextStyle(color: Colors.white, fontSize: 30),)),
+                //   ],
+                // ),
+                // SizedBox(height: 30,),
+                // Column(
+                //   crossAxisAlignment: CrossAxisAlignment.start,
+                //   children: <Widget>[
+                //     FadeAnimation(1, Text("3", style: TextStyle(color: Colors.yellow[400], fontSize: 40, fontWeight: FontWeight.bold),)),
+                //     FadeAnimation(1.2, Text("Exercises", style: TextStyle(color: Colors.white, fontSize: 30),)),
+                //   ],
+                // ),
+                // SizedBox(height: 180,),
+                // FadeAnimation(1, Align(
+                //   child: Text("Start the morning with your health",
+                //   textAlign: TextAlign.center,
+                //   style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w100),),
+                // )),
+                // SizedBox(height: 30,),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: AnimatedBuilder(
+                    animation: rippleAnimation!,
+                    builder: (context, child) => Container(
+                      width: rippleAnimation?.value,
+                      height: rippleAnimation?.value,
+                      child: Container(
+                        decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: Colors.white.withOpacity(.4)),
+                        child: InkWell(
+                          onTap: () {
+                            scaleController?.forward();
+                          },
+                          child: AnimatedBuilder(
+                            animation: scaleAnimation!,
+                            builder: (context, child) => Transform.scale(
+                              scale: scaleAnimation?.value,
+                              child: Container(
+                                margin: EdgeInsets.all(10),
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.white),
+                                child: scaleController?.status ==
+                                            AnimationStatus.forward ||
+                                        scaleController?.status ==
+                                            AnimationStatus.completed
+                                    ? null
+                                    : Center(
+                                        child: Icon(
+                                        Icons.fingerprint,
+                                        size: 40,
+                                      )),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ));
   }
 }
