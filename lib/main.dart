@@ -1,6 +1,6 @@
-import 'package:act8_diseno_1057/Video10.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import 'package:act8_diseno_1057/Dashboard.dart';
 
 void main() => runApp(MaterialApp(
       debugShowCheckedModeBanner: false,
@@ -13,8 +13,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
-  PageController? _pageController;
-
   AnimationController? rippleController;
   AnimationController? scaleController;
 
@@ -24,8 +22,6 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   void initState() {
     super.initState();
-
-    _pageController = PageController(initialPage: 0);
 
     rippleController =
         AnimationController(vsync: this, duration: Duration(seconds: 1));
@@ -60,99 +56,90 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        children: <Widget>[
-          makePage(image: 'assets/images/fondo.png'),
-          makePage(image: 'assets/images/logo.png'),
-          makePage(image: 'assets/images/logo.png'),
-        ],
-      ),
+      body: makePage(image: 'assets/images/fondo.png'),
     );
   }
 
-  Widget makePage({image}) {
+  Widget makePage({required String image}) {
     return Container(
-        decoration: BoxDecoration(
-            image:
-                DecorationImage(image: AssetImage(image), fit: BoxFit.cover)),
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topRight,
-                  end: Alignment.bottomRight,
-                  colors: [
-                Colors.black.withOpacity(.3),
-                Colors.black.withOpacity(.2),
-              ])),
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 40, horizontal: 30),
-            child: Column(
+      decoration: BoxDecoration(
+        image: DecorationImage(image: AssetImage(image), fit: BoxFit.cover),
+      ),
+      child: Container(
+        padding: EdgeInsets.symmetric(horizontal: 30, vertical: 60),
+        child: Stack(
+          children: [
+            Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: <Widget>[
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 60,
-                    ),
-                    Text(
-                      'Refrescate\nManera Unica',
-                      style: TextStyle(
-                          color: Color(0xffffffff),
-                          fontSize: 45,
-                          fontWeight: FontWeight.w900),
-                    ),
-                    SizedBox(
-                      height: 20,
-                    ),
-                    Text(
-                      'Esta es la app de CocaCola\n toma la mejor bebida del mundo.',
-                      style: TextStyle(
-                          color: Color(0xff000000),
-                          fontSize: 18,
-                          height: 1.4,
-                          fontWeight: FontWeight.w300),
-                    ),
-                    SizedBox(
-                      height: 40,
-                    ),
-                  ],
+              children: [
+                Text(
+                  'Coca-Cola',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    shadows: [Shadow(color: Colors.black54, blurRadius: 5)],
+                  ),
                 ),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: <Widget>[
-                //     FadeAnimation(1, Text("15", style: TextStyle(color: Colors.yellow[400], fontSize: 40, fontWeight: FontWeight.bold),)),
-                //     FadeAnimation(1.2, Text("Minutes", style: TextStyle(color: Colors.white, fontSize: 30),)),
-                //   ],
-                // ),
-                // SizedBox(height: 30,),
-                // Column(
-                //   crossAxisAlignment: CrossAxisAlignment.start,
-                //   children: <Widget>[
-                //     FadeAnimation(1, Text("3", style: TextStyle(color: Colors.yellow[400], fontSize: 40, fontWeight: FontWeight.bold),)),
-                //     FadeAnimation(1.2, Text("Exercises", style: TextStyle(color: Colors.white, fontSize: 30),)),
-                //   ],
-                // ),
-                // SizedBox(height: 180,),
-                // FadeAnimation(1, Align(
-                //   child: Text("Start the morning with your health",
-                //   textAlign: TextAlign.center,
-                //   style: TextStyle(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w100),),
-                // )),
-                // SizedBox(height: 30,),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: AnimatedBuilder(
+                SizedBox(height: 20),
+                Text(
+                  '235',
+                  style: TextStyle(
+                    color: Colors.yellow[400],
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Peso (ml)',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+                SizedBox(height: 20),
+                Text(
+                  '107',
+                  style: TextStyle(
+                    color: Colors.yellow[400],
+                    fontSize: 40,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  'Energia (kcal)',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                  ),
+                ),
+              ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Acompaña con una bebida\ntus comidas favoritas',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                      fontWeight: FontWeight.w300,
+                    ),
+                  ),
+                  SizedBox(height: 20),
+                  AnimatedBuilder(
                     animation: rippleAnimation!,
                     builder: (context, child) => Container(
                       width: rippleAnimation?.value,
                       height: rippleAnimation?.value,
                       child: Container(
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white.withOpacity(.4)),
+                          shape: BoxShape.circle,
+                          color: Colors.white.withOpacity(.4),
+                        ),
                         child: InkWell(
                           onTap: () {
                             scaleController?.forward();
@@ -164,8 +151,9 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                               child: Container(
                                 margin: EdgeInsets.all(10),
                                 decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.white),
+                                  shape: BoxShape.circle,
+                                  color: Colors.white,
+                                ),
                                 child: scaleController?.status ==
                                             AnimationStatus.forward ||
                                         scaleController?.status ==
@@ -173,9 +161,10 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                                     ? null
                                     : Center(
                                         child: Icon(
-                                        Icons.fingerprint,
-                                        size: 40,
-                                      )),
+                                          Icons.fingerprint,
+                                          size: 40,
+                                        ),
+                                      ),
                               ),
                             ),
                           ),
@@ -183,10 +172,12 @@ class _HomePageState extends State<HomePage> with TickerProviderStateMixin {
                       ),
                     ),
                   ),
-                )
-              ],
-            ),
-          ),
-        ));
+                ],
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
